@@ -11,9 +11,14 @@ public class Ambi {
         Posn center;
 	int width = 150;
         int height = 50;
+        //the space between the center of the Ambi and the edges of the screen
+        static int horizBuffer = 75;
+        static int vertBuffer = 60;
+        
 	IColor col = new Red();
-        String code = "up";
+        String code = "none";
         boolean locked;
+        
 	
 	Ambi(Posn center, String code, boolean locked) {
 		this.center = center;
@@ -21,10 +26,29 @@ public class Ambi {
                 this.locked = locked;
                     
 	}
-       
         
-        public String newCode(){
-            locked = true;
+        Ambi(Posn center, boolean locked) {
+		this.center = center;
+                this.code = code;
+                this.locked = locked;
+                this.code = newCode();  
+	}
+       
+        public boolean horizEdgeCheck(boolean rightHuh){
+            if((center.x < horizBuffer && !rightHuh) || (center.x > Untitled5.screenHeight-horizBuffer && rightHuh)) 
+                return false;
+            else
+                return true;
+        }
+        
+        public boolean vertEdgeCheck(boolean upHuh){
+            if((center.y < vertBuffer && upHuh) || (center.y > Untitled5.screenHeight-vertBuffer && !upHuh)) 
+                return false;
+            else
+                return true;
+        }
+        
+        public static String newCode(){
             int ran = Untitled5.randomInt(0,3);
             if(ran == 0){
                 return "up";
@@ -41,9 +65,10 @@ public class Ambi {
             return "error";
         }
         
-        public void unlock(String ke){
+        public Ambi tryUnlock(String ke){
             if(this.code.equals(ke))
-                locked = false;
+                return new Ambi(this.center,this.code,false);
+            else return this;
         }
         
         WorldImage ambiImage(){
@@ -78,28 +103,24 @@ public class Ambi {
         
         public Ambi moveAmbi(String ke){
             
-                unlock(ke);
-                if(!locked){
-		if (ke.equals("d")){
+                if(this.tryUnlock(ke).locked){
+            locked = true;
+		if (ke.equals("d") && horizEdgeCheck(true)){
                     newCode();
-			return new Ambi(new Posn(this.center.x + 50, this.center.y),
-							newCode(), true);
+			return new Ambi(new Posn(this.center.x + 50, this.center.y), true);
 		}
                 
-		else if (ke.equals("a")){
+		else if (ke.equals("a") && horizEdgeCheck(false)){
                     newCode();
-			return new Ambi(new Posn(this.center.x - 50, this.center.y),
-							newCode(), true);
+			return new Ambi(new Posn(this.center.x - 50, this.center.y), true);
 		}
-		else if (ke.equals("w")){
+		else if (ke.equals("w") && vertEdgeCheck(true)){
                     newCode();
-			return new Ambi(new Posn(this.center.x, this.center.y-50),
-							newCode(), true);
+			return new Ambi(new Posn(this.center.x, this.center.y-50), true);
 		}
-		else if (ke.equals("s")){
+		else if (ke.equals("s") && vertEdgeCheck(false)){
                     newCode();
-			return new Ambi(new Posn(this.center.x, this.center.y+50),
-							newCode(), true);
+			return new Ambi(new Posn(this.center.x, this.center.y+50), true);
 		}
 		
 	}
