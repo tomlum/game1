@@ -66,8 +66,9 @@ public class Ambi {
         }
         
         public Ambi tryUnlock(String ke){
-            if(this.code.equals(ke))
+            if(this.code.equals(ke)){
                 return new Ambi(this.center,this.code,false);
+            }
             else return this;
         }
         
@@ -103,8 +104,8 @@ public class Ambi {
         
         public Ambi moveAmbi(String ke){
             
-                if(this.tryUnlock(ke).locked){
-            locked = true;
+                locked = this.tryUnlock(ke).locked;
+                if(!locked){
 		if (ke.equals("d") && horizEdgeCheck(true)){
                     newCode();
 			return new Ambi(new Posn(this.center.x + 50, this.center.y), true);

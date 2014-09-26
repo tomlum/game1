@@ -12,10 +12,26 @@ import java.util.Random;
 
 public class Untitled5 extends World{
     
-    static int screenWidth = 1000;
-    static int screenHeight = 1000;
-    Ambi Dexter;
+    static final int screenWidth = 1000;
+    static final int screenHeight = 1000;
+    //currently changing this won't actually change the number of boxes
+    static final int numberOfBoxes = 6;
+    Ambi dexter;
+    Laser[] theLasers;
+
     public WorldImage grid = new RectangleImage(new Posn(0, 0), screenWidth*2, screenHeight*2, new Black());
+    
+    public static Laser randomLaser(String type){
+        if(type.equals("down")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2);
+        }
+        else if(type.equals("any")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
+        }
+        else if(type.equals("reset")){return new Laser(new Posn(0,0),0).reset();
+        }
+        else 
+        return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
+        }
+    
     
     
    public static void testBounds(int trials){
@@ -41,13 +57,54 @@ public class Untitled5 extends World{
         for(int i = 0; i<trials; i++){
             Ambi randomAmbi = new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,screenWidth)), true);
             String guess = Ambi.newCode();
-            if(randomAmbi.tryUnlock(guess).locked && randomAmbi.code==guess){
+            if(randomAmbi.tryUnlock(guess).locked == (randomAmbi.code==guess)){
                 System.out.println("fix code and lock");
             
         }
         
     }
    }
+   
+   public static void testMoveLaser(int trials){
+        for(int i = 0; i<trials; i++){
+            Laser ranLas = randomLaser("any");
+            if((ranLas.dir == 0 && ranLas.moveLaser().center.y != ranLas.center.y-Laser.speed)
+                    ||(ranLas.dir == 1 && ranLas.moveLaser().center.x != ranLas.center.x+Laser.speed)
+                    ||(ranLas.dir == 2 && ranLas.moveLaser().center.y != ranLas.center.y+Laser.speed)
+                    ||(ranLas.dir == 3 && ranLas.moveLaser().center.x != ranLas.center.x-Laser.speed)
+                    ){
+                System.out.println("Error in moveLaser");
+            }
+        }
+        
+    }
+   
+    public static void testLaserBounds(int trials){
+        for(int i = 0; i<trials; i++){
+            Laser[] ranLazArr = new Laser[] {
+                randomLaser("any"),
+                randomLaser("any"),
+                randomLaser("any"),
+                randomLaser("any"),
+                randomLaser("any"),
+                randomLaser("any")
+            };
+            for(int j = 0; j<5;j++){
+                Laser current = ranLazArr[j];
+                Laser next = ranLazArr[j].moveLaser();
+            if(current.Bounds()!= next.Bounds()
+                    && 
+                    !(next.center.x > screenWidth
+                    || next.center.x < 0
+                    || next.center.y > screenHeight
+                    || next.center.y < 0)){
+                System.out.println("Error in Bounds");
+            }
+            }
+            
+        }
+        
+    }
     
     static Random rand = new Random();
     public static int randomInt( int min, int max ) {
@@ -55,28 +112,34 @@ public class Untitled5 extends World{
     
     
     
-    public Untitled5(Ambi ambi) {
+    public Untitled5(Ambi ambi, Laser[] las) {
 		super();
-		this.Dexter = ambi;
+		this.dexter = ambi;
+                this.theLasers = las;
 	}
     
     
     
         public World onTick(){
+            for(int i = 0; i<theLasers.length;i++){
+            theLasers[i] = theLasers[i].moveLaser();
+            }
+            theLasers = Laser.checkForReset(theLasers);
             return this;
         }
         
+        public World onKeyEvent(String ke) {
+            return new Untitled5(this.dexter.moveAmbi(ke), this.theLasers);
+	}
+        
         public WorldImage makeImage(){
-		return new OverlayImages(this.grid, this.Dexter.ambiImage()); 
+		return new OverlayImages(this.grid, 
+                new OverlayImages(this.dexter.ambiImage(),
+                Laser.lasersImage(theLasers, 5))); 
 	}
     
  
-        public World onKeyEvent(String ke) {
-	  if (ke.equals("esc"))
-	    return this.endOfWorld("Goodbye");
-	  else
-            return new Untitled5(this.Dexter.moveAmbi(ke));
-	}
+        
     
     
     
@@ -84,7 +147,17 @@ public class Untitled5 extends World{
     public static void main(String[] args) {
         testBounds(500);
         testCodeAndLocked(500);
-        Untitled5 w = new Untitled5(new Ambi(new Posn(500, 500),"up", true));
+        testMoveLaser(500);
+        testLaserBounds(500);
+        Untitled5 w = new Untitled5(new Ambi(new Posn(500, 500),"up", true),
+        new Laser[]{
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2),
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),-20), 2),
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),-40), 2),
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),-60), 2),
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),-80), 2),
+        new Laser(new Posn(randomInt(0,Untitled5.screenWidth),-100), 2)
+        });
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }
