@@ -9,14 +9,14 @@ import java.awt.Color;
 import java.util.Random;
 public class Ambi {
         Posn center;
-	int width = 150;
-        int height = 50;
+	static int width = 150;
+        static int height = 50;
         //the space between the center of the Ambi and the edges of the screen
         static int horizBuffer = 75;
-        static int vertBuffer = 60;
-        
+        static int vertBuffer = 25;
 	IColor col = new Red();
         String code = "none";
+        static int speed = 50;
         boolean locked;
         
 	
@@ -24,7 +24,6 @@ public class Ambi {
 		this.center = center;
                 this.code = code;
                 this.locked = locked;
-                    
 	}
         
         Ambi(Posn center, boolean locked) {
@@ -34,19 +33,17 @@ public class Ambi {
                 this.code = newCode();  
 	}
        
-        public boolean horizEdgeCheck(boolean rightHuh){
-            if((center.x < horizBuffer && !rightHuh) || (center.x > Untitled5.screenHeight-horizBuffer && rightHuh)) 
-                return false;
-            else
+        public boolean outOfBounds(){
+            if((center.x > Untitled5.screenWidth - horizBuffer)||
+                    (center.y > Untitled5.screenHeight - vertBuffer)||
+                    (center.y < vertBuffer)||
+                    (center.x < horizBuffer)){
                 return true;
+            }
+	
+            return false;
         }
         
-        public boolean vertEdgeCheck(boolean upHuh){
-            if((center.y < vertBuffer && upHuh) || (center.y > Untitled5.screenHeight-vertBuffer && !upHuh)) 
-                return false;
-            else
-                return true;
-        }
         
         public static String newCode(){
             int ran = Untitled5.randomInt(0,3);
@@ -65,11 +62,11 @@ public class Ambi {
             return "error";
         }
         
-        public Ambi tryUnlock(String ke){
+        public boolean tryUnlock(String ke){
             if(this.code.equals(ke)){
-                return new Ambi(this.center,this.code,false);
+                return true;
             }
-            else return this;
+            else return !locked;
         }
         
         WorldImage ambiImage(){
@@ -101,31 +98,45 @@ public class Ambi {
         }
         
         //tie resetting to the movement keys vs the code keys
-        
-        public Ambi moveAmbi(String ke){
+        public Ambi moveAmbi(int dir, boolean lock){
+        switch(dir){
+        case 1: return new Ambi(new Posn(center.x+speed,center.y), lock);
+        case 2: return new Ambi(new Posn(center.x,center.y+speed), lock);
+        case 3: return new Ambi(new Posn(center.x-speed,center.y), lock);
+        default: return new Ambi(new Posn(center.x,center.y-speed), lock);
+	}
             
-                locked = this.tryUnlock(ke).locked;
+        }
+        
+        public Ambi controlAmbi(String ke){
+            
+                locked = !this.tryUnlock(ke);
                 if(!locked){
-		if (ke.equals("d") && horizEdgeCheck(true)){
-                    newCode();
-			return new Ambi(new Posn(this.center.x + 50, this.center.y), true);
+		if (ke.equals("d") && !moveAmbi(1,false).outOfBounds()){
+                    return moveAmbi(1,true);
 		}
-                
-		else if (ke.equals("a") && horizEdgeCheck(false)){
-                    newCode();
-			return new Ambi(new Posn(this.center.x - 50, this.center.y), true);
+		else if (ke.equals("a") && !moveAmbi(3,false).outOfBounds()){
+                    return moveAmbi(3,true);
 		}
-		else if (ke.equals("w") && vertEdgeCheck(true)){
-                    newCode();
-			return new Ambi(new Posn(this.center.x, this.center.y-50), true);
+		else if (ke.equals("w") && !moveAmbi(0,false).outOfBounds()){
+                    return moveAmbi(0,true);
 		}
-		else if (ke.equals("s") && vertEdgeCheck(false)){
-                    newCode();
-			return new Ambi(new Posn(this.center.x, this.center.y+50), true);
+		else if (ke.equals("s") && !moveAmbi(2,false).outOfBounds()){
+                    return moveAmbi(2,true);
 		}
-		
 	}
                 return this;
                 
 }
+        public boolean collisionCheck(){
+            for(int i = 0; i < Untitled5.numberOfLasers;i++){
+                Laser currentLas = Untitled5.theLasers[i];
+                if(Math.abs(this.center.x-currentLas.center.x)<(width+Laser.width)/2&&
+                   Math.abs(this.center.y-currentLas.center.y)<(height+Laser.height)/2
+                        ){
+                    return true;
+            }
+        }
+            return false;
+        }
 }

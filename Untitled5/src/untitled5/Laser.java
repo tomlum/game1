@@ -14,7 +14,8 @@ public class Laser {
     //0 is up, 1 is right, 2 is down, 3 is left
     int dir;
     boolean resetMe;
-    static int speed = 50;
+    final static int initSpeed = 50;
+    static int speed = initSpeed;
     static IColor laserColor = new Green();
     
     Laser(Posn center, int dir) {
@@ -46,7 +47,7 @@ public class Laser {
     
     
     
-    public Laser reset() {
+    public static Laser reset() {
         int whereToSet = Untitled5.randomInt(0, 3);
         switch(whereToSet){
         case 1: return new Laser(new Posn(0,Untitled5.randomInt(0,Untitled5.screenHeight)), 1);
@@ -56,7 +57,7 @@ public class Laser {
 	}
     }
     
-    public boolean Bounds() {
+    public boolean outOfBounds() {
         if((this.center.x<0-width&&this.dir==3)
                 ||(this.center.x>Untitled5.screenWidth+width&&this.dir==1)
                 ||(this.center.y<0-height&&this.dir==0)
@@ -72,8 +73,8 @@ public class Laser {
         //marks lasers to be removed in the add function
 		for(int i = 0; i < currentArray.length; i++){
                     newArray = currentArray;
-                    if(currentArray[i].Bounds()){
-                    newArray[i] = newArray[i].reset();
+                    if(currentArray[i].outOfBounds()){
+                    newArray[i] = reset();
                     }
                 }
                 return newArray;
