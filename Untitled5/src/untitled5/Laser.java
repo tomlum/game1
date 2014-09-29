@@ -6,6 +6,7 @@ import javalib.worldcanvas.*;
 import javalib.worldimages.*;
 import java.awt.Color;
 import java.util.Random;
+import static untitled5.Untitled5.theLasers;
 
 public class Laser {
     Posn center;
@@ -25,7 +26,7 @@ public class Laser {
                     
 	}
     
-    public Laser moveLaser() {
+    public Laser move() {
                     switch(dir){
             case 1:  return new Laser(new Posn(center.x+speed,center.y), dir);
             case 2:  return new Laser(new Posn(center.x,center.y+speed), dir);
@@ -33,6 +34,13 @@ public class Laser {
             default: return new Laser(new Posn(center.x,center.y-speed), dir);
                     }
 	}
+    public static Laser[] moveLasArr(Laser[] theArr){
+        Laser[] newArr = new Laser[theArr.length];
+        for(int i = 0; i<theArr.length;i++){
+            newArr[i] = theArr[i].move();
+            }
+        return newArr;
+    }
     
     public static WorldImage lasersImage(Laser[] currentArray, int i){
         
@@ -48,12 +56,12 @@ public class Laser {
     
     
     public static Laser reset() {
-        int whereToSet = Untitled5.randomInt(0, 3);
+        int whereToSet = Test.randomInt(0, 3);
         switch(whereToSet){
-        case 1: return new Laser(new Posn(0,Untitled5.randomInt(0,Untitled5.screenHeight)), 1);
-        case 2: return new Laser(new Posn(Untitled5.randomInt(0,Untitled5.screenWidth),0), 2);
-        case 3: return new Laser(new Posn(Untitled5.screenWidth,Untitled5.randomInt(0,Untitled5.screenHeight)), 3);
-        default: return new Laser(new Posn(Untitled5.randomInt(0,Untitled5.screenWidth),Untitled5.screenHeight), 0);
+        case 1: return new Laser(new Posn(0,Test.randomInt(0,Untitled5.screenHeight)), 1);
+        case 2: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),0), 2);
+        case 3: return new Laser(new Posn(Untitled5.screenWidth,Test.randomInt(0,Untitled5.screenHeight)), 3);
+        default: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),Untitled5.screenHeight), 0);
 	}
     }
     

@@ -46,7 +46,7 @@ public class Ambi {
         
         
         public static String newCode(){
-            int ran = Untitled5.randomInt(0,3);
+            int ran = Test.randomInt(0,3);
             if(ran == 0){
                 return "up";
             }
@@ -128,15 +128,24 @@ public class Ambi {
                 return this;
                 
 }
-        public boolean collisionCheck(){
-            for(int i = 0; i < Untitled5.numberOfLasers;i++){
-                Laser currentLas = Untitled5.theLasers[i];
-                if(Math.abs(this.center.x-currentLas.center.x)<(width+Laser.width)/2&&
-                   Math.abs(this.center.y-currentLas.center.y)<(height+Laser.height)/2
+        public boolean collisionCheck(Laser laser){
+                if(Math.abs(this.center.x-laser.center.x)<(width+Laser.width)/2&&
+                   Math.abs(this.center.y-laser.center.y)<(height+Laser.height)/2
                         ){
+                    return true;
+            }
+        
+            return false;
+        }
+        
+        public boolean arrayCollisionCheck(Laser[] laserArr){
+            for(int i = 0; i < laserArr.length;i++){
+                if(collisionCheck(laserArr[i])){
                     return true;
             }
         }
             return false;
         }
+        
+        
 }

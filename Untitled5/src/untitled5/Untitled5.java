@@ -21,107 +21,11 @@ public class Untitled5 extends World{
             
             
     Ambi dexter;
-    static Laser[] theLasers = new Laser[numberOfLasers];
-    
-    
-    public static Ambi randomAmbi(){
-        return new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,screenHeight)), false);
-    }
-
-    public WorldImage grid = new RectangleImage(new Posn(0, 0), screenWidth*2, screenHeight*2, new Black());
-    
-    public static Laser randomLaser(String type){
-        if(type.equals("down")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2);
-        }
-        else if(type.equals("any")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
-        }
-        else if(type.equals("reset")){return new Laser(new Posn(0,0),0).reset();
-        }
-        else 
-        return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
-        }
+    static Laser[] theLasers = new Laser[numberOfLasers]; 
+    public WorldImage back = new RectangleImage(new Posn(0, 0), screenWidth*2, Untitled5.screenHeight*2, new Black());
     
     
     
-   public static void testBoundsandMove(int trials,int paces){
-        for(int i = 0; i<trials; i++){
-            Ambi randomAmbiA = new Ambi(new Posn(randomInt(Ambi.horizBuffer,screenWidth-Ambi.horizBuffer),randomInt(Ambi.vertBuffer,screenHeight-Ambi.vertBuffer)), false);
-            int[] randomPaces = new int[paces];
-            for(int j = 0; j < paces; j++){
-                randomPaces[j] = randomInt(0,3);
-            }
-            Ambi randomAmbiB = randomAmbiA;
-            for(int j = 0; j < paces; j++){
-                randomAmbiB = randomAmbiB.moveAmbi(randomPaces[j], false);
-            }
-            if(randomAmbiB.outOfBounds() != 
-                    (randomAmbiB.center.x>screenWidth-Ambi.horizBuffer||
-                    randomAmbiB.center.x<Ambi.horizBuffer||
-                    randomAmbiB.center.y>screenHeight - Ambi.vertBuffer||
-                    randomAmbiB.center.y<Ambi.vertBuffer)){
-                System.out.println("fix Bounds and Move");
-            }
-            
-        }
-        
-    }
-   
-   public static void testCodeAndLocked(int trials){
-        for(int i = 0; i<trials; i++){
-            Ambi randomAmbi = new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,screenWidth)), true);
-            String guess = Ambi.newCode();
-            if(!randomAmbi.tryUnlock(guess) == (randomAmbi.code==guess)){
-                System.out.println("fix code and lock");
-            
-        }
-        
-    }
-   }
-   
-   public static void testMoveLaser(int trials){
-        for(int i = 0; i<trials; i++){
-            Laser ranLas = randomLaser("any");
-            if((ranLas.dir == 0 && ranLas.moveLaser().center.y != ranLas.center.y-Laser.speed)
-                    ||(ranLas.dir == 1 && ranLas.moveLaser().center.x != ranLas.center.x+Laser.speed)
-                    ||(ranLas.dir == 2 && ranLas.moveLaser().center.y != ranLas.center.y+Laser.speed)
-                    ||(ranLas.dir == 3 && ranLas.moveLaser().center.x != ranLas.center.x-Laser.speed)
-                    ){
-                System.out.println("Error in moveLaser");
-            }
-        }
-        
-    }
-   
-    public static void testLaserBounds(int trials){
-        for(int i = 0; i<trials; i++){
-            Laser[] ranLazArr = new Laser[] {
-                randomLaser("any"),
-                randomLaser("any"),
-                randomLaser("any"),
-                randomLaser("any"),
-                randomLaser("any"),
-                randomLaser("any")
-            };
-            for(int j = 0; j<5;j++){
-                Laser current = ranLazArr[j];
-                Laser next = ranLazArr[j].moveLaser();
-            if(current.outOfBounds()!= next.outOfBounds()
-                    && 
-                    !(next.center.x > screenWidth
-                    || next.center.x < 0
-                    || next.center.y > screenHeight
-                    || next.center.y < 0)){
-                System.out.println("Error in Bounds");
-            }
-            }
-            
-        }
-        
-    }
-    
-    static Random rand = new Random();
-    public static int randomInt( int min, int max ) {
-        return rand.nextInt((max - min) + 1) + min; }
     
     
     
@@ -134,7 +38,7 @@ public class Untitled5 extends World{
     
     
         public World onTick(){
-            if(dexter.collisionCheck()){
+            if(dexter.arrayCollisionCheck(theLasers)){
                 gameOver = true;
             }
             
@@ -145,9 +49,7 @@ public class Untitled5 extends World{
             
             if(!gameOver){
                 time++;
-            for(int i = 0; i<theLasers.length;i++){
-            theLasers[i] = theLasers[i].moveLaser();
-            }
+            theLasers = Laser.moveLasArr(theLasers);
             theLasers = Laser.checkForReset(theLasers);
             }
             return this;
@@ -164,12 +66,12 @@ public class Untitled5 extends World{
         
         public WorldImage makeImage(){
             if(!gameOver){
-		return new OverlayImages(this.grid, 
+		return new OverlayImages(this.back, 
                 new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(Laser.lasersImage(theLasers, 5),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue())))); 
 	}
-            return new OverlayImages(this.grid, 
+            return new OverlayImages(this.back, 
                 new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(Laser.lasersImage(theLasers, 5),
                 new OverlayImages(new TextImage(new Posn(screenWidth/2,screenHeight/2), "Game Over",30, new White()),
@@ -183,10 +85,12 @@ public class Untitled5 extends World{
     
 
     public static void main(String[] args) {
-        testBoundsandMove(500,10);
-        testCodeAndLocked(500);
-        testMoveLaser(500);
-        testLaserBounds(500);
+        Test.testBoundsandMove(500,10);
+        Test.testCodeAndLocked(500);
+        Test.testMoveLaser(500);
+        Test.testLaserBounds(500);
+        Test.testCollisionAndLaserMovement(500);
+        
         for(int i = 0; i <theLasers.length; i++){
             theLasers[i] = Laser.reset();
         }
