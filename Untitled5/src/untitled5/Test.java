@@ -11,6 +11,36 @@ import static untitled5.Untitled5.screenWidth;
 
 public class Test {
     
+    static Random rand = new Random();
+    public static int randomInt( int min, int max ) {
+        return rand.nextInt((max - min) + 1) + min; }
+    
+    public static String randomButton() throws Error{
+        int ran = randomInt(0,7);
+        if (ran == 0){ return "up";}
+        else if (ran == 1){ return "right";}
+        else if (ran == 2){ return "down";}
+        else if (ran == 3){ return "left";}
+        else if (ran == 4){ return "w";}
+        else if (ran == 5){ return "d";}
+        else if (ran == 6){ return "s";}
+        else if (ran == 7){ return "a";}
+        else throw new Error("Out of bounds error in randomButton");
+    }
+    
+    public static void testRandomButton(int n){
+        
+        String init = randomButton();
+        boolean fishy = true;
+        for(int i = 0; i<n; i++){
+            if(!randomButton().equals(init)){
+                fishy = false;
+            }
+        }
+        if(fishy){
+            System.out.println("Check Random Button");
+        }
+    }
     
     public static Ambi randomAmbi(){
         return new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,Untitled5.screenHeight)), false);
@@ -104,10 +134,10 @@ public class Test {
    public static void testMoveLaser(int trials){
         for(int i = 0; i<trials; i++){
             Laser ranLas = randomLaser("any");
-            if((ranLas.dir == 0 && ranLas.move().center.y != ranLas.center.y-Laser.speed)
-                    ||(ranLas.dir == 1 && ranLas.move().center.x != ranLas.center.x+Laser.speed)
-                    ||(ranLas.dir == 2 && ranLas.move().center.y != ranLas.center.y+Laser.speed)
-                    ||(ranLas.dir == 3 && ranLas.move().center.x != ranLas.center.x-Laser.speed)
+            if((ranLas.dir == 0 && ranLas.move().center.y != ranLas.center.y-ranLas.speed)
+                    ||(ranLas.dir == 1 && ranLas.move().center.x != ranLas.center.x+ranLas.speed)
+                    ||(ranLas.dir == 2 && ranLas.move().center.y != ranLas.center.y+ranLas.speed)
+                    ||(ranLas.dir == 3 && ranLas.move().center.x != ranLas.center.x-ranLas.speed)
                     ){
                 System.out.println("Error in moveLaser");
             }
@@ -142,9 +172,35 @@ public class Test {
         
     }
     
-    static Random rand = new Random();
-    public static int randomInt( int min, int max ) {
-        return rand.nextInt((max - min) + 1) + min; }
+    public static void testWholeGame(int reps, int moves){
+        //fishy1 is true if all reps end with Dexter in the center, is possible
+        //but unlikely
+            boolean fishy1 = true;
+            for(int i = 0; i < reps; i++){
+            Untitled5 testWorld = new Untitled5(new Ambi(new Posn(Untitled5.screenWidth/2, Untitled5.screenHeight/2),"up", true),
+        Laser.checkForReset(new Laser[Untitled5.numberOfLasers]));
+            for(int j = moves; j > 0; j--){
+            testWorld = testWorld.onTick();
+            testWorld = testWorld.onKeyEvent(Test.randomButton());
+            if(testWorld.dexter.outOfBounds()){
+                System.out.println("somehow got out of bounds");
+            }
+        }
+            if(testWorld.gameOver && !testWorld.dexter.arrayCollisionCheck(testWorld.theLasers)){
+                System.out.println("array Collision Check and/or gameOver aren't working");
+            }
+            if(testWorld.dexter.center.x != Untitled5.screenWidth/2 
+                    && testWorld.dexter.center.y != Untitled5.screenHeight/2){
+                fishy1 = false;
+            }
+            }
+            if(fishy1){
+                System.out.println("Unlikely that all would be in the middle... May have Error in Move");
+            }
+                
+        }
+    
+    
     
     
 }

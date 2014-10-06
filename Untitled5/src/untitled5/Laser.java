@@ -6,7 +6,6 @@ import javalib.worldcanvas.*;
 import javalib.worldimages.*;
 import java.awt.Color;
 import java.util.Random;
-import static untitled5.Untitled5.theLasers;
 
 public class Laser {
     Posn center;
@@ -16,7 +15,7 @@ public class Laser {
     int dir;
     boolean resetMe;
     final static int initSpeed = 40;
-    static int speed = initSpeed;
+    int speed = initSpeed;
     static IColor laserColor = new Green();
     
     Laser(Posn center, int dir) {
@@ -81,11 +80,24 @@ public class Laser {
         //marks lasers to be removed in the add function
 		for(int i = 0; i < currentArray.length; i++){
                     newArray = currentArray;
-                    if(currentArray[i].outOfBounds()){
+                    try{if(currentArray[i].outOfBounds()){
                     newArray[i] = reset();
-                    }
+                    }}
+                    catch(NullPointerException bob){
+                            newArray[i] = reset();
+                            }
                 }
                 return newArray;
 	}
+    
+    public static Laser[] incArraySpeed(Laser[] currentArray,int amount) {
+        Laser[] newArray = new Laser[currentArray.length];
+		for(int i = 0; i < currentArray.length; i++){
+                    currentArray[i].speed = currentArray[i].speed+amount;
+                }
+                return newArray;
+	}
+    
+    
     
 }

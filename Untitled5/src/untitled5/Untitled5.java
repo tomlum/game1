@@ -15,12 +15,13 @@ public class Untitled5 extends World{
     static final int screenHeight = 700;
     //currently changing this won't actually change the number of boxes
     static final int numberOfLasers = 6;
-    static int time = 0;
-    static int laserSpeedIncRate = 20;
+    int time = 0;
+    int laserSpeedIncRate = 20;
+    boolean gameOver = false;
             
             
     Ambi dexter;
-    static Laser[] theLasers = new Laser[numberOfLasers]; 
+    Laser[] theLasers = new Laser[numberOfLasers]; 
     public WorldImage back = new RectangleImage(new Posn(0, 0), screenWidth*2, Untitled5.screenHeight*2, new Black());
     
     
@@ -36,15 +37,10 @@ public class Untitled5 extends World{
     
     
     
-        public World onTick(){
-            
-            
-            
-            if(time%laserSpeedIncRate==0){
-            Laser.speed=Laser.speed+1;
+        public Untitled5 onTick(){
+            if(time%laserSpeedIncRate==laserSpeedIncRate){
+            theLasers = Laser.incArraySpeed(theLasers,1);
             }
-            
-            
                 time++;
             theLasers = Laser.moveLasArr(theLasers);
             theLasers = Laser.checkForReset(theLasers);
@@ -55,6 +51,7 @@ public class Untitled5 extends World{
         
         public WorldEnd worldEnds(){
             if(dexter.arrayCollisionCheck(theLasers)){
+                gameOver = true;
                 return new WorldEnd(true, new OverlayImages(this.makeImage(),
                     new TextImage(new Posn(screenWidth/2,screenHeight/2), "Game Over",30, new White())));
             }
@@ -62,7 +59,7 @@ public class Untitled5 extends World{
         }
         
         
-        public World onKeyEvent(String ke) {
+        public Untitled5 onKeyEvent(String ke) {
             return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers);
 	}
         
@@ -71,17 +68,12 @@ public class Untitled5 extends World{
                 new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(Laser.lasersImage(theLasers, 5),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue())))); 
-	}
+        }
     
         //This code is just a super rough sketch!!!
-        public static void testThis(int moves){
-            World testWorld = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        theLasers);
-            for(int i = moves; i > 0; i--){
-                testWorld.onTick();
-            testWorld = testWorld.onKeyEvent("up");
-            }
-        }
+        
+        //This code is just a super rough sketch!!!
+        
     
     
     
@@ -92,12 +84,10 @@ public class Untitled5 extends World{
         Test.testMoveLaser(500);
         Test.testLaserBounds(500);
         Test.testCollisionAndLaserMovement(500);
-        
-        for(int i = 0; i <theLasers.length; i++){
-            theLasers[i] = Laser.reset();
-        }
+        Test.testRandomButton(300);
+        Test.testWholeGame(100,100);
         Untitled5 w = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        theLasers);
+        Laser.checkForReset(new Laser[numberOfLasers]));
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }
