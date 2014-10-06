@@ -15,7 +15,6 @@ public class Untitled5 extends World{
     static final int screenHeight = 700;
     //currently changing this won't actually change the number of boxes
     static final int numberOfLasers = 6;
-    static boolean gameOver = false;
     static int time = 0;
     static int laserSpeedIncRate = 20;
             
@@ -38,48 +37,51 @@ public class Untitled5 extends World{
     
     
         public World onTick(){
-            if(dexter.arrayCollisionCheck(theLasers)){
-                gameOver = true;
-            }
+            
             
             
             if(time%laserSpeedIncRate==0){
             Laser.speed=Laser.speed+1;
             }
             
-            if(!gameOver){
+            
                 time++;
             theLasers = Laser.moveLasArr(theLasers);
             theLasers = Laser.checkForReset(theLasers);
-            }
+            
             return this;
         
         }
         
+        public WorldEnd worldEnds(){
+            if(dexter.arrayCollisionCheck(theLasers)){
+                return new WorldEnd(true, new OverlayImages(this.makeImage(),
+                    new TextImage(new Posn(screenWidth/2,screenHeight/2), "Game Over",30, new White())));
+            }
+            else return new WorldEnd(false, this.makeImage());
+        }
+        
         
         public World onKeyEvent(String ke) {
-            if(!gameOver){
             return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers);
-            }
-            return this;
 	}
         
         public WorldImage makeImage(){
-            if(!gameOver){
 		return new OverlayImages(this.back, 
                 new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(Laser.lasersImage(theLasers, 5),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue())))); 
 	}
-            return new OverlayImages(this.back, 
-                new OverlayImages(this.dexter.ambiImage(),
-                new OverlayImages(Laser.lasersImage(theLasers, 5),
-                new OverlayImages(new TextImage(new Posn(screenWidth/2,screenHeight/2), "Game Over",30, new White()),
-                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
-        }
     
- 
-        
+        //This code is just a super rough sketch!!!
+        public static void testThis(int moves){
+            World testWorld = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
+        theLasers);
+            for(int i = moves; i > 0; i--){
+                testWorld.onTick();
+            testWorld = testWorld.onKeyEvent("up");
+            }
+        }
     
     
     

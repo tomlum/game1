@@ -15,7 +15,7 @@ public class Laser {
     //0 is up, 1 is right, 2 is down, 3 is left
     int dir;
     boolean resetMe;
-    final static int initSpeed = 50;
+    final static int initSpeed = 40;
     static int speed = initSpeed;
     static IColor laserColor = new Green();
     
