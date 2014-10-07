@@ -7,8 +7,6 @@ import javalib.worldimages.*;
 import java.awt.Color;
 import java.util.Random;
 
-//as time goes on, speed increases
-
 public class Untitled5 extends World{
     
     static final int screenWidth = 1000;
@@ -17,6 +15,7 @@ public class Untitled5 extends World{
     static final int numberOfLasers = 6;
     int time = 0;
     int laserSpeedIncRate = 20;
+    int laserSpeed = Laser.initSpeed;
     boolean gameOver = false;
             
             
@@ -26,24 +25,23 @@ public class Untitled5 extends World{
     
     
     
-    
-    
-    
-    public Untitled5(Ambi ambi, Laser[] las) {
+    public Untitled5(Ambi ambi, Laser[] las, int time, int laserSpeed) {
 		super();
 		this.dexter = ambi;
                 this.theLasers = las;
+                this.time = time;
+                this.laserSpeed = laserSpeed;
 	}
     
     
     
         public Untitled5 onTick(){
-            if(time%laserSpeedIncRate==laserSpeedIncRate){
-            theLasers = Laser.incArraySpeed(theLasers,1);
+            if(time%laserSpeedIncRate==laserSpeedIncRate-1){
+            this.laserSpeed = this.laserSpeed + 1;
             }
                 time++;
             theLasers = Laser.moveLasArr(theLasers);
-            theLasers = Laser.checkForReset(theLasers);
+            theLasers = Laser.checkForReset(theLasers, this.laserSpeed);
             
             return this;
         
@@ -60,7 +58,7 @@ public class Untitled5 extends World{
         
         
         public Untitled5 onKeyEvent(String ke) {
-            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers);
+            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers, this.time, this.laserSpeed);
 	}
         
         public WorldImage makeImage(){
@@ -87,7 +85,7 @@ public class Untitled5 extends World{
         Test.testRandomButton(300);
         Test.testWholeGame(100,100);
         Untitled5 w = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        Laser.checkForReset(new Laser[numberOfLasers]));
+        Laser.checkForReset(new Laser[numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }

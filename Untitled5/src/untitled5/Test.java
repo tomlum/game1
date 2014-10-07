@@ -48,14 +48,14 @@ public class Test {
 
    
     public static Laser randomLaser(String type){
-        if(type.equals("down")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2);
+        if(type.equals("down")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2, Laser.initSpeed);
         }
-        else if(type.equals("any")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
+        else if(type.equals("any")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
         }
-        else if(type.equals("reset")){return Laser.reset();
+        else if(type.equals("reset")){return Laser.reset(Laser.initSpeed);
         }
         else 
-        return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3));
+        return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
         }
     
     
@@ -102,7 +102,7 @@ public class Test {
            Ambi testAmbiDown = new Ambi(new Posn(testAmbiCenter.center.x, testAmbiCenter.center.y+Ambi.height), "down", false);
            Ambi testAmbiLeft = new Ambi(new Posn(testAmbiCenter.center.x-Ambi.width, testAmbiCenter.center.y), "left", false);
            Ambi testAmbiRight = new Ambi(new Posn(testAmbiCenter.center.x+Ambi.width, testAmbiCenter.center.y), "right", false);
-           Laser testLaser = Laser.reset();
+           Laser testLaser = Laser.reset(Laser.initSpeed);
            while(testLaser.outOfBounds()){
                testLaser = testLaser.move();
                if(testAmbiCenter.collisionCheck(testLaser)&&!(
@@ -178,7 +178,7 @@ public class Test {
             boolean fishy1 = true;
             for(int i = 0; i < reps; i++){
             Untitled5 testWorld = new Untitled5(new Ambi(new Posn(Untitled5.screenWidth/2, Untitled5.screenHeight/2),"up", true),
-        Laser.checkForReset(new Laser[Untitled5.numberOfLasers]));
+        Laser.checkForReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
             for(int j = moves; j > 0; j--){
             testWorld = testWorld.onTick();
             testWorld = testWorld.onKeyEvent(Test.randomButton());

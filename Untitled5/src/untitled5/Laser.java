@@ -18,19 +18,24 @@ public class Laser {
     int speed = initSpeed;
     static IColor laserColor = new Green();
     
-    Laser(Posn center, int dir) {
+    Laser(Posn center, int dir, int speed) {
 		this.center = center;
                 this.dir = dir;
                 resetMe = false;
+                this.speed = speed;
                     
 	}
     
+    
+    
+    
+    
     public Laser move() {
                     switch(dir){
-            case 1:  return new Laser(new Posn(center.x+speed,center.y), dir);
-            case 2:  return new Laser(new Posn(center.x,center.y+speed), dir);
-            case 3:  return new Laser(new Posn(center.x-speed,center.y), dir);
-            default: return new Laser(new Posn(center.x,center.y-speed), dir);
+            case 1:  return new Laser(new Posn(center.x+speed,center.y), dir, this.speed);
+            case 2:  return new Laser(new Posn(center.x,center.y+speed), dir, this.speed);
+            case 3:  return new Laser(new Posn(center.x-speed,center.y), dir, this.speed);
+            default: return new Laser(new Posn(center.x,center.y-speed), dir, this.speed);
                     }
 	}
     public static Laser[] moveLasArr(Laser[] theArr){
@@ -54,13 +59,13 @@ public class Laser {
     
     
     
-    public static Laser reset() {
+    public static Laser reset(int speed) {
         int whereToSet = Test.randomInt(0, 3);
         switch(whereToSet){
-        case 1: return new Laser(new Posn(0,Test.randomInt(0,Untitled5.screenHeight)), 1);
-        case 2: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),0), 2);
-        case 3: return new Laser(new Posn(Untitled5.screenWidth,Test.randomInt(0,Untitled5.screenHeight)), 3);
-        default: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),Untitled5.screenHeight), 0);
+        case 1: return new Laser(new Posn(0,Test.randomInt(0,Untitled5.screenHeight)), 1, speed);
+        case 2: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),0), 2, speed);
+        case 3: return new Laser(new Posn(Untitled5.screenWidth,Test.randomInt(0,Untitled5.screenHeight)), 3, speed);
+        default: return new Laser(new Posn(Test.randomInt(0,Untitled5.screenWidth),Untitled5.screenHeight), 0, speed);
 	}
     }
     
@@ -75,28 +80,22 @@ public class Laser {
 	}
 
     
-    public static Laser[] checkForReset(Laser[] currentArray) {
+    public static Laser[] checkForReset(Laser[] currentArray, int speed) {
         Laser[] newArray = new Laser[currentArray.length];
         //marks lasers to be removed in the add function
 		for(int i = 0; i < currentArray.length; i++){
                     newArray = currentArray;
                     try{if(currentArray[i].outOfBounds()){
-                    newArray[i] = reset();
+                    newArray[i] = reset(speed);
                     }}
                     catch(NullPointerException bob){
-                            newArray[i] = reset();
+                            newArray[i] = reset(speed);
                             }
                 }
                 return newArray;
 	}
     
-    public static Laser[] incArraySpeed(Laser[] currentArray,int amount) {
-        Laser[] newArray = new Laser[currentArray.length];
-		for(int i = 0; i < currentArray.length; i++){
-                    currentArray[i].speed = currentArray[i].speed+amount;
-                }
-                return newArray;
-	}
+   
     
     
     
