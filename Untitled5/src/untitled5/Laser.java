@@ -80,7 +80,7 @@ public class Laser {
 	}
 
     
-    public static Laser[] checkForReset(Laser[] currentArray, int speed) {
+    public static Laser[] arrayCheckAndReset(Laser[] currentArray, int speed) {
         Laser[] newArray = new Laser[currentArray.length];
         //marks lasers to be removed in the add function
 		for(int i = 0; i < currentArray.length; i++){

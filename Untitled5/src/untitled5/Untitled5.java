@@ -41,7 +41,7 @@ public class Untitled5 extends World{
             }
                 time++;
             theLasers = Laser.moveLasArr(theLasers);
-            theLasers = Laser.checkForReset(theLasers, this.laserSpeed);
+            theLasers = Laser.arrayCheckAndReset(theLasers, this.laserSpeed);
             
             return this;
         
@@ -85,7 +85,7 @@ public class Untitled5 extends World{
         Test.testRandomButton(300);
         Test.testWholeGame(100,100);
         Untitled5 w = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        Laser.checkForReset(new Laser[numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }

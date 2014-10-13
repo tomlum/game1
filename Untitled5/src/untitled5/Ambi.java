@@ -1,12 +1,8 @@
 
 package untitled5;
 
-import javalib.funworld.*;
 import javalib.colors.*;
-import javalib.worldcanvas.*;
 import javalib.worldimages.*;
-import java.awt.Color;
-import java.util.Random;
 public class Ambi {
         Posn center;
 	static int width = 150;

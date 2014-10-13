@@ -7,7 +7,7 @@ import javalib.worldimages.*;
 import java.awt.Color;
 import java.util.Random;
 import static untitled5.Untitled5.screenWidth;
-
+//high score is 177 :D
 
 public class Test {
     
@@ -176,16 +176,48 @@ public class Test {
         //fishy1 is true if all reps end with Dexter in the center, is possible
         //but unlikely
             boolean fishy1 = true;
+            boolean fishy2 = true;
+            boolean fishy3 = true;
+            int lastscore1 = 0;
+            int lastspeed1 = 0;
             for(int i = 0; i < reps; i++){
+                
             Untitled5 testWorld = new Untitled5(new Ambi(new Posn(Untitled5.screenWidth/2, Untitled5.screenHeight/2),"up", true),
-        Laser.checkForReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
+            
             for(int j = moves; j > 0; j--){
-            testWorld = testWorld.onTick();
+                if(!testWorld.gameOver){
             testWorld = testWorld.onKeyEvent(Test.randomButton());
-            if(testWorld.dexter.outOfBounds()){
+            testWorld = testWorld.onTick();
+            
+                    if(testWorld.dexter.arrayCollisionCheck(testWorld.theLasers)){
+                    testWorld.gameOver = true;
+                    }
+                }
+                
+                //checks if out of bounds
+                if(testWorld.dexter.outOfBounds()){
                 System.out.println("somehow got out of bounds");
+                }
             }
-        }
+           if(i==0){
+               lastscore1 = testWorld.time;
+           }
+           if(i==0){
+               lastspeed1 = testWorld.laserSpeed;
+           }
+           if (lastscore1!=testWorld.time){
+                fishy2 = false;
+            }
+           
+           if (lastspeed1!=testWorld.laserSpeed){
+                fishy3 = false;
+            }
+           
+            //Prints out the scores of the random test, very cool to see!!!
+           //System.out.println(testWorld.time);
+           //System.out.println(testWorld.laserSpeed);
+            
             if(testWorld.gameOver && !testWorld.dexter.arrayCollisionCheck(testWorld.theLasers)){
                 System.out.println("array Collision Check and/or gameOver aren't working");
             }
@@ -193,9 +225,21 @@ public class Test {
                     && testWorld.dexter.center.y != Untitled5.screenHeight/2){
                 fishy1 = false;
             }
+            
+            
+            
+            
             }
+            //it's possibly for these to print, but
+            //if these are consistantly returning, that will be a problem
             if(fishy1){
                 System.out.println("Unlikely that all would be in the middle... May have Error in Move");
+            }
+            if(fishy2){
+                System.out.println("Unlikely that all have the same score...");
+            }
+            if(fishy3){
+                System.out.println("Unlikely that all lasers would have the same speed...");
             }
                 
         }
