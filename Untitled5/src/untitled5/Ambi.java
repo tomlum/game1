@@ -3,6 +3,7 @@ package untitled5;
 
 import javalib.colors.*;
 import javalib.worldimages.*;
+
 public class Ambi extends Block {
 	static int width = 150;
         static int height = 50;
@@ -63,19 +64,13 @@ public class Ambi extends Block {
             
         //returns the apropriate arrow image depending on code
         WorldImage ambiArrow(){
-            if(code.equals("up")){
-                return new TextImage(this.center, "/\\",20, new Blue());
+            switch(code){
+            case "up": return new TextImage(this.center, "/\\",20, new Blue());
+            case "left": return new TextImage(this.center, "<-",20, new Blue());
+            case "right": return new TextImage(this.center, "->",20, new Blue());
+            case "down": return new TextImage(this.center, "\\/",20, new Blue());
+            default : return new TextImage(this.center, "error",20, new Blue());
             }
-            else if(code.equals("left")){
-                return new TextImage(this.center, "<-",20, new Blue());
-            }
-            else if(code.equals("right")){
-                return new TextImage(this.center, "->",20, new Blue());
-            }
-            else if(code.equals("down")){
-                return new TextImage(this.center, "\\/",20, new Blue());
-            }
-           return new TextImage(this.center, "error",20, new Blue());
         }
         
         
@@ -95,32 +90,21 @@ public class Ambi extends Block {
             
                 locked = !this.tryUnlock(ke);
                 if(!locked){
-		if (ke.equals("d")){
-                    return moveAmbi(1,true);
-		}
-		else if (ke.equals("a")){
-                    return moveAmbi(3,true);
-		}
-		else if (ke.equals("w")){
-                    return moveAmbi(0,true);
-		}
-		else if (ke.equals("s")){
-                    return moveAmbi(2,true);
-		}
-	}
+                    switch(ke){
+                        case "d": return moveAmbi(1,true);
+                        case "a": return moveAmbi(3,true);
+                        case "w": return moveAmbi(0,true);
+                        case "s": return moveAmbi(2,true);
+                }
+                }
                 return this;
-                
-}
-        public boolean collisionCheck(Laser laser){
-                if(Math.abs(this.center.x-laser.center.x)<(width+Laser.width)/2&&
-                   Math.abs(this.center.y-laser.center.y)<(height+Laser.height)/2
-                        ){
-                    return true;
-            }
-        
-            return false;
         }
         
+        public boolean collisionCheck(Laser laser){
+                return Math.abs(this.center.x-laser.center.x)<(width+Laser.width)/2&&
+                   Math.abs(this.center.y-laser.center.y)<(height+Laser.height)/2;
+        } 
+       
         public boolean arrayCollisionCheck(Laser[] laserArr){
             for(int i = 0; i < laserArr.length;i++){
                 if(collisionCheck(laserArr[i])){

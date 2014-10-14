@@ -13,14 +13,16 @@ public class Test {
     public static String randomButton(){
         int ran = randomInt(0,7);
         if (ran == 0){ return "up";}
-        else if (ran == 1){ return "right";}
-        else if (ran == 2){ return "down";}
-        else if (ran == 3){ return "left";}
-        else if (ran == 4){ return "w";}
-        else if (ran == 5){ return "d";}
-        else if (ran == 6){ return "s";}
-        else if (ran == 7){ return "a";}
-        return "ERROR";
+        switch(ran){
+        case 1: return "right";
+        case 2: return "down";
+        case 3: return "left";
+        case 4: return "w";
+        case 5: return "d";
+        case 6: return "s";
+        case 7: return "a";
+        default : return "ERROR";
+        }
     }
     
     public static void testRandomButton(int n){
@@ -47,14 +49,15 @@ public class Test {
 
    
     public static Laser randomLaser(String type){
-        if(type.equals("down")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2, Laser.initSpeed);
+        switch(type){
+            case "down" : return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),0), 2, Laser.initSpeed);
+        
+            case "any" : return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
+        
+            case "reset": return Laser.reset(Laser.initSpeed);
+                
+            default: return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
         }
-        else if(type.equals("any")){return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
-        }
-        else if(type.equals("reset")){return Laser.reset(Laser.initSpeed);
-        }
-        else 
-        return new Laser(new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight)), randomInt(0,3), Laser.initSpeed);
         }
     
     

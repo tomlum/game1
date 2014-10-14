@@ -74,8 +74,4 @@ public class Laser extends Block {
                 return newArray;
 	}
     
-   
-    
-    
-    
 }

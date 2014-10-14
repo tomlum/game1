@@ -61,12 +61,12 @@ public class Untitled5 extends World{
         
         public WorldImage makeImage(){
             if(gameOver){
-		return new OverlayImages(this.back, 
+		return new OverlayImages(back, 
                 new OverlayImages(lasersImage(theLasers, 5), new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages((gigatron.deceptiImage(true)),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
         }
-            else return new OverlayImages(this.back, 
+            else return new OverlayImages(back, 
                 new OverlayImages((gigatron.deceptiImage(false)), new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(lasersImage(theLasers, 5),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
