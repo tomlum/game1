@@ -20,22 +20,24 @@ public class Laser extends Block {
                 this.speed = speed;
 	}
     
+    Laser(Block block, int dir, int speed) {
+        super(block.center, width, height, new Green());
+                this.dir = dir;
+                resetMe = false;
+                this.speed = speed;
+	}
     
     
     
     
-    public Laser move() {
-                    switch(dir){
-            case 1:  return new Laser(new Posn(center.x+speed,center.y), dir, this.speed);
-            case 2:  return new Laser(new Posn(center.x,center.y+speed), dir, this.speed);
-            case 3:  return new Laser(new Posn(center.x-speed,center.y), dir, this.speed);
-            default: return new Laser(new Posn(center.x,center.y-speed), dir, this.speed);
-                    }
+    public Laser moveLaser() {
+        
+                    return new Laser(this.move(dir, speed), dir, speed);
 	}
     public static Laser[] moveLasArr(Laser[] theArr){
         Laser[] newArr = new Laser[theArr.length];
         for(int i = 0; i<theArr.length;i++){
-            newArr[i] = theArr[i].move();
+            newArr[i] = theArr[i].moveLaser();
             }
         return newArr;
     }

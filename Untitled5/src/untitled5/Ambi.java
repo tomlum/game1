@@ -24,6 +24,12 @@ public class Ambi extends Block {
                 this.locked = locked;
                 this.code = newCode();  
 	}
+        
+        Ambi(Block block, boolean locked) {
+        super(block.center, width, height, new Green());
+                this.locked = locked;
+                this.code = newCode();  
+	}
        
         public static String newCode(){
             int ran = Test.randomInt(0,3);
@@ -79,29 +85,26 @@ public class Ambi extends Block {
         
         //tie resetting to the movement keys vs the code keys
         public Ambi moveAmbi(int dir, boolean lock){
-        switch(dir){
-        case 1: return new Ambi(new Posn(center.x+speed,center.y), lock);
-        case 2: return new Ambi(new Posn(center.x,center.y+speed), lock);
-        case 3: return new Ambi(new Posn(center.x-speed,center.y), lock);
-        default: return new Ambi(new Posn(center.x,center.y-speed), lock);
-	}
-            
+            if(!this.move(dir, speed).bufferOutOfBounds()){
+            return new Ambi(this.move(dir, speed), lock);
+            }
+            else return this;
         }
         
         public Ambi controlAmbi(String ke){
             
                 locked = !this.tryUnlock(ke);
                 if(!locked){
-		if (ke.equals("d") && !moveAmbi(1,false).bufferOutOfBounds()){
+		if (ke.equals("d")){
                     return moveAmbi(1,true);
 		}
-		else if (ke.equals("a") && !moveAmbi(3,false).bufferOutOfBounds()){
+		else if (ke.equals("a")){
                     return moveAmbi(3,true);
 		}
-		else if (ke.equals("w") && !moveAmbi(0,false).bufferOutOfBounds()){
+		else if (ke.equals("w")){
                     return moveAmbi(0,true);
 		}
-		else if (ke.equals("s") && !moveAmbi(2,false).bufferOutOfBounds()){
+		else if (ke.equals("s")){
                     return moveAmbi(2,true);
 		}
 	}

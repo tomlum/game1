@@ -1,12 +1,7 @@
 
 package untitled5;
-import javalib.funworld.*;
-import javalib.colors.*;
-import javalib.worldcanvas.*;
 import javalib.worldimages.*;
-import java.awt.Color;
 import java.util.Random;
-import static untitled5.Untitled5.screenWidth;
 //high score is 177 :D
 
 public class Test {
@@ -43,7 +38,7 @@ public class Test {
     }
     
     public static Posn randomPosn(){
-        return new Posn(randomInt(0,screenWidth),randomInt(0,Untitled5.screenHeight));
+        return new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight));
     }
     
     public static Ambi randomAmbi(){
@@ -75,7 +70,7 @@ public class Test {
     
    public static void testBoundsandMove(int trials,int paces){
         for(int i = 0; i<trials; i++){
-            Ambi randomAmbiA = new Ambi(new Posn(randomInt(Ambi.width/2,screenWidth-Ambi.height/2),randomInt(Ambi.height/2,Untitled5.screenHeight-Ambi.height/2)), false);
+            Ambi randomAmbiA = new Ambi(new Posn(randomInt(Ambi.width/2,Untitled5.screenWidth-Ambi.height/2),randomInt(Ambi.height/2,Untitled5.screenHeight-Ambi.height/2)), false);
             int[] randomPaces = new int[paces];
             for(int j = 0; j < paces; j++){
                 randomPaces[j] = randomInt(0,3);
@@ -85,7 +80,7 @@ public class Test {
                 randomAmbiB = randomAmbiB.moveAmbi(randomPaces[j], false);
             }
             if(randomAmbiB.bufferOutOfBounds() != 
-                    (randomAmbiB.center.x>screenWidth-Ambi.width/2||
+                    (randomAmbiB.center.x>Untitled5.screenWidth-Ambi.width/2||
                     randomAmbiB.center.x<Ambi.width/2||
                     randomAmbiB.center.y>Untitled5.screenHeight - Ambi.height/2||
                     randomAmbiB.center.y<Ambi.height/2)){
@@ -108,7 +103,7 @@ public class Test {
            Ambi testAmbiRight = new Ambi(new Posn(testAmbiCenter.center.x+Ambi.width, testAmbiCenter.center.y), "right", false);
            Laser testLaser = Laser.reset(Laser.initSpeed);
            while(testLaser.outOfBounds()){
-               testLaser = testLaser.move();
+               testLaser = testLaser.moveLaser();
                if(testAmbiCenter.collisionCheck(testLaser)&&!(
                        testAmbiDown.collisionCheck(testLaser)||
                        testAmbiLeft.collisionCheck(testLaser)||
@@ -138,10 +133,10 @@ public class Test {
    public static void testMoveLaser(int trials){
         for(int i = 0; i<trials; i++){
             Laser ranLas = randomLaser("any");
-            if((ranLas.dir == 0 && ranLas.move().center.y != ranLas.center.y-ranLas.speed)
-                    ||(ranLas.dir == 1 && ranLas.move().center.x != ranLas.center.x+ranLas.speed)
-                    ||(ranLas.dir == 2 && ranLas.move().center.y != ranLas.center.y+ranLas.speed)
-                    ||(ranLas.dir == 3 && ranLas.move().center.x != ranLas.center.x-ranLas.speed)
+            if((ranLas.dir == 0 && ranLas.moveLaser().center.y != ranLas.center.y-ranLas.speed)
+                    ||(ranLas.dir == 1 && ranLas.moveLaser().center.x != ranLas.center.x+ranLas.speed)
+                    ||(ranLas.dir == 2 && ranLas.moveLaser().center.y != ranLas.center.y+ranLas.speed)
+                    ||(ranLas.dir == 3 && ranLas.moveLaser().center.x != ranLas.center.x-ranLas.speed)
                     ){
                 System.out.println("Error in moveLaser");
             }
@@ -163,11 +158,11 @@ public class Test {
             for(int j = 0; j<5;j++){
                 for(int k = 0; k < moves; k++){
                 Laser current = ranLazArr[j];
-                Laser next = ranLazArr[j].move();
+                Laser next = ranLazArr[j].moveLaser();
                 
             if(current.outOfBounds()!= next.outOfBounds()
                     && 
-                    !(next.center.x > screenWidth + Laser.width
+                    !(next.center.x > Untitled5.screenWidth + Laser.width
                     || next.center.x < 0 - Laser.width
                     || next.center.y > Untitled5.screenHeight + Laser.height
                     || next.center.y < 0 - Laser.height)){
@@ -196,14 +191,14 @@ public class Test {
             
             for(int j = moves; j > 0; j--){
                 if(!testWorld.gameOver){
-            Posn initDeceptPosn = testWorld.Ultratron.center;
+            Posn initDeceptPosn = testWorld.gigatron.center;
             testWorld = testWorld.onKeyEvent(Test.randomButton());
             testWorld = testWorld.onTick();
             
                     if(testWorld.dexter.arrayCollisionCheck(testWorld.theLasers)){
                     testWorld.gameOver = true;
-                    if(testWorld.Ultratron.center.x != initDeceptPosn.x||
-                       testWorld.Ultratron.center.y != initDeceptPosn.y
+                    if(testWorld.gigatron.center.x != initDeceptPosn.x||
+                       testWorld.gigatron.center.y != initDeceptPosn.y
                     ){
                         fishy4 = false;
                     }

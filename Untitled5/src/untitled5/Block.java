@@ -1,24 +1,23 @@
 package untitled5;
 import javalib.worldimages.*;
 import javalib.colors.*;
-import static untitled5.Ambi.width;
 
 public class Block {
     Posn center;
     int width;
     int height;
-    static IColor col;
+    static IColor color;
     int dir;
     
     public Block(Posn ce, int w, int h, IColor co){
         this.center = ce;
         this.width = w;
         this.height = h;
-        this.col = co;
+        this.color = co;
     }
     
     public WorldImage drawBlock(){
-            return new RectangleImage(this.center, this.width, this.height, this.col);
+            return new RectangleImage(this.center, this.width, this.height, this.color);
                     }
     
     
@@ -32,6 +31,16 @@ public class Block {
 	
             return false;
         }
+    
+    public Block move(int dir, int speed){
+     switch(dir){
+        case 1: return new Block(new Posn(center.x+speed,center.y), width, height, color);
+        case 2: return new Block(new Posn(center.x,center.y+speed), width, height, color);
+        case 3: return new Block(new Posn(center.x-speed,center.y), width, height, color);
+        default: return new Block(new Posn(center.x,center.y-speed), width, height, color);
+	}   
+    }
+    
     
     public boolean bufferOutOfBounds(){
             if((center.x > Untitled5.screenWidth - width/2)||

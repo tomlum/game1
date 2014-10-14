@@ -11,7 +11,7 @@ public class Untitled5 extends World{
     //currently changing this won't actually change the number of boxes
     static final int numberOfLasers = 6;
     int time = 0;
-    int laserSpeedIncRate = 20;
+    static int laserSpeedIncRate = 20;
     int laserSpeed = Laser.initSpeed;
     boolean gameOver = false;
     
@@ -19,8 +19,8 @@ public class Untitled5 extends World{
             
     Ambi dexter;
     Laser[] theLasers = new Laser[numberOfLasers]; 
-    DeceptiBot Ultratron;
-    public WorldImage back = new RectangleImage(new Posn(0, 0), screenWidth*2, Untitled5.screenHeight*2, new Black());
+    DeceptiBot gigatron;
+    static public WorldImage back = new RectangleImage(new Posn(screenWidth/2, screenHeight/2), screenWidth, Untitled5.screenHeight, new Blue());
     
     
     
@@ -30,20 +30,17 @@ public class Untitled5 extends World{
                 this.theLasers = las;
                 this.time = time;
                 this.laserSpeed = laserSpeed;
-                this.Ultratron = dec;
+                this.gigatron = dec;
 	}
     
     
     
         public Untitled5 onTick(){
+            int newLaserSpeed = this.laserSpeed;
             if(time%laserSpeedIncRate==laserSpeedIncRate-1){
-            this.laserSpeed = this.laserSpeed + 1;
+            newLaserSpeed = this.laserSpeed + 1;
             }
-                time++;
-            theLasers = Laser.moveLasArr(theLasers);
-            theLasers = Laser.arrayCheckAndReset(theLasers, this.laserSpeed);
-            
-            return this;
+            return new Untitled5(dexter, Laser.arrayCheckAndReset(Laser.moveLasArr(theLasers), laserSpeed), gigatron, time+1, newLaserSpeed);
             
         
         }
@@ -59,18 +56,18 @@ public class Untitled5 extends World{
         
         
         public Untitled5 onKeyEvent(String ke) {
-            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers, new DeceptiBot(this.Ultratron.moveAmbi(Test.randomInt(0, 3), false)), this.time, this.laserSpeed);
+            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers, new DeceptiBot(this.gigatron.moveAmbi(Test.randomInt(0, 3), false)), this.time, this.laserSpeed);
 	}
         
         public WorldImage makeImage(){
             if(gameOver){
 		return new OverlayImages(this.back, 
                 new OverlayImages(lasersImage(theLasers, 5), new OverlayImages(this.dexter.ambiImage(),
-                new OverlayImages((Ultratron.deceptiImage(true)),
+                new OverlayImages((gigatron.deceptiImage(true)),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
         }
             else return new OverlayImages(this.back, 
-                new OverlayImages((Ultratron.deceptiImage(false)), new OverlayImages(this.dexter.ambiImage(),
+                new OverlayImages((gigatron.deceptiImage(false)), new OverlayImages(this.dexter.ambiImage(),
                 new OverlayImages(lasersImage(theLasers, 5),
                 new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
         }
