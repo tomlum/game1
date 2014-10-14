@@ -60,16 +60,12 @@ public class Untitled5 extends World{
 	}
         
         public WorldImage makeImage(){
-            if(gameOver){
+            
 		return new OverlayImages(back, 
                 new OverlayImages(lasersImage(theLasers, 5), new OverlayImages(this.dexter.ambiImage(),
-                new OverlayImages((gigatron.deceptiImage(true)),
-                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
-        }
-            else return new OverlayImages(back, 
-                new OverlayImages((gigatron.deceptiImage(false)), new OverlayImages(this.dexter.ambiImage(),
-                new OverlayImages(lasersImage(theLasers, 5),
-                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
+                new OverlayImages((gigatron.deceptiImage(gameOver)),
+                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Red()))))); 
+        
         }
         
         public WorldImage lasersImage(Laser[] currentArray, int i){
@@ -94,7 +90,7 @@ public class Untitled5 extends World{
         Test.testRandomButton(300);
         Test.testWholeGame(100,100);
         Untitled5 w = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        Laser.arrayCheckAndReset(new Laser[numberOfLasers], Laser.initSpeed), new DeceptiBot(Test.randomPosn()), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[numberOfLasers], Laser.initSpeed), new DeceptiBot(Test.randomAmbiPosn()), 0, Laser.initSpeed);
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }

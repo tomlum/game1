@@ -43,6 +43,10 @@ public class Test {
         return new Posn(randomInt(0,Untitled5.screenWidth),randomInt(0,Untitled5.screenHeight));
     }
     
+     public static Posn randomAmbiPosn(){
+        return new Posn(randomInt(Ambi.width/2,Untitled5.screenWidth-Ambi.width/2),randomInt(Ambi.height/2,Untitled5.screenHeight- Ambi.height/2));
+    }
+    
     public static Ambi randomAmbi(){
         return new Ambi(randomPosn(), false);
     }
@@ -123,9 +127,9 @@ public class Test {
    
    public static void testCodeAndLocked(int trials){
         for(int i = 0; i<trials; i++){
-            Ambi randomAmbi = new Ambi(randomPosn(), true);
+            Ambi randomAmbi = new Ambi(randomAmbiPosn(), true);
             String guess = Ambi.newCode();
-            if(!randomAmbi.tryUnlock(guess) == (randomAmbi.code==guess)){
+            if(!randomAmbi.tryUnlock(guess) == (randomAmbi.code.equals(guess))){
                 System.out.println("fix code and lock");
             
         }
@@ -190,7 +194,7 @@ public class Test {
             for(int i = 0; i < reps; i++){
                 
             Untitled5 testWorld = new Untitled5(new Ambi(new Posn(Untitled5.screenWidth/2, Untitled5.screenHeight/2),"up", true),
-        Laser.arrayCheckAndReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), new DeceptiBot(randomPosn()), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), new DeceptiBot(randomAmbiPosn()), 0, Laser.initSpeed);
             
             for(int j = moves; j > 0; j--){
                 if(!testWorld.gameOver){
