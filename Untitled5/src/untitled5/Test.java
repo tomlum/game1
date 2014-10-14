@@ -15,7 +15,7 @@ public class Test {
     public static int randomInt( int min, int max ) {
         return rand.nextInt((max - min) + 1) + min; }
     
-    public static String randomButton() throws Error{
+    public static String randomButton(){
         int ran = randomInt(0,7);
         if (ran == 0){ return "up";}
         else if (ran == 1){ return "right";}
@@ -25,7 +25,7 @@ public class Test {
         else if (ran == 5){ return "d";}
         else if (ran == 6){ return "s";}
         else if (ran == 7){ return "a";}
-        else throw new Error("Out of bounds error in randomButton");
+        return "ERROR";
     }
     
     public static void testRandomButton(int n){
@@ -42,8 +42,12 @@ public class Test {
         }
     }
     
+    public static Posn randomPosn(){
+        return new Posn(randomInt(0,screenWidth),randomInt(0,Untitled5.screenHeight));
+    }
+    
     public static Ambi randomAmbi(){
-        return new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,Untitled5.screenHeight)), false);
+        return new Ambi(randomPosn(), false);
     }
 
    
@@ -71,7 +75,7 @@ public class Test {
     
    public static void testBoundsandMove(int trials,int paces){
         for(int i = 0; i<trials; i++){
-            Ambi randomAmbiA = new Ambi(new Posn(randomInt(Ambi.horizBuffer,screenWidth-Ambi.horizBuffer),randomInt(Ambi.vertBuffer,Untitled5.screenHeight-Ambi.vertBuffer)), false);
+            Ambi randomAmbiA = new Ambi(new Posn(randomInt(Ambi.width/2,screenWidth-Ambi.height/2),randomInt(Ambi.height/2,Untitled5.screenHeight-Ambi.height/2)), false);
             int[] randomPaces = new int[paces];
             for(int j = 0; j < paces; j++){
                 randomPaces[j] = randomInt(0,3);
@@ -80,11 +84,11 @@ public class Test {
             for(int j = 0; j < paces; j++){
                 randomAmbiB = randomAmbiB.moveAmbi(randomPaces[j], false);
             }
-            if(randomAmbiB.outOfBounds() != 
-                    (randomAmbiB.center.x>screenWidth-Ambi.horizBuffer||
-                    randomAmbiB.center.x<Ambi.horizBuffer||
-                    randomAmbiB.center.y>Untitled5.screenHeight - Ambi.vertBuffer||
-                    randomAmbiB.center.y<Ambi.vertBuffer)){
+            if(randomAmbiB.bufferOutOfBounds() != 
+                    (randomAmbiB.center.x>screenWidth-Ambi.width/2||
+                    randomAmbiB.center.x<Ambi.width/2||
+                    randomAmbiB.center.y>Untitled5.screenHeight - Ambi.height/2||
+                    randomAmbiB.center.y<Ambi.height/2)){
                 System.out.println("fix Bounds and Move");
             }
             
@@ -121,7 +125,7 @@ public class Test {
    
    public static void testCodeAndLocked(int trials){
         for(int i = 0; i<trials; i++){
-            Ambi randomAmbi = new Ambi(new Posn(randomInt(0,screenWidth),randomInt(0,screenWidth)), true);
+            Ambi randomAmbi = new Ambi(randomPosn(), true);
             String guess = Ambi.newCode();
             if(!randomAmbi.tryUnlock(guess) == (randomAmbi.code==guess)){
                 System.out.println("fix code and lock");
@@ -155,17 +159,21 @@ public class Test {
                 randomLaser("any"),
                 randomLaser("any")
             };
+            int moves = Test.randomInt(0, 20);
             for(int j = 0; j<5;j++){
+                for(int k = 0; k < moves; k++){
                 Laser current = ranLazArr[j];
                 Laser next = ranLazArr[j].move();
+                
             if(current.outOfBounds()!= next.outOfBounds()
                     && 
-                    !(next.center.x > screenWidth
-                    || next.center.x < 0
-                    || next.center.y > Untitled5.screenHeight
-                    || next.center.y < 0)){
-                System.out.println("Error in Bounds");
+                    !(next.center.x > screenWidth + Laser.width
+                    || next.center.x < 0 - Laser.width
+                    || next.center.y > Untitled5.screenHeight + Laser.height
+                    || next.center.y < 0 - Laser.height)){
+                System.out.println("Error in Laser Bounds");
             }
+                }
             }
             
         }
@@ -178,20 +186,27 @@ public class Test {
             boolean fishy1 = true;
             boolean fishy2 = true;
             boolean fishy3 = true;
+            boolean fishy4 = true;
             int lastscore1 = 0;
             int lastspeed1 = 0;
             for(int i = 0; i < reps; i++){
                 
             Untitled5 testWorld = new Untitled5(new Ambi(new Posn(Untitled5.screenWidth/2, Untitled5.screenHeight/2),"up", true),
-        Laser.arrayCheckAndReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[Untitled5.numberOfLasers], Laser.initSpeed), new DeceptiBot(randomPosn()), 0, Laser.initSpeed);
             
             for(int j = moves; j > 0; j--){
                 if(!testWorld.gameOver){
+            Posn initDeceptPosn = testWorld.Ultratron.center;
             testWorld = testWorld.onKeyEvent(Test.randomButton());
             testWorld = testWorld.onTick();
             
                     if(testWorld.dexter.arrayCollisionCheck(testWorld.theLasers)){
                     testWorld.gameOver = true;
+                    if(testWorld.Ultratron.center.x != initDeceptPosn.x||
+                       testWorld.Ultratron.center.y != initDeceptPosn.y
+                    ){
+                        fishy4 = false;
+                    }
                     }
                 }
                 
@@ -240,6 +255,9 @@ public class Test {
             }
             if(fishy3){
                 System.out.println("Unlikely that all lasers would have the same speed...");
+            }
+            if(fishy3){
+                System.out.println("Unlikely that Deceptibot wouldn't move at all...");
             }
                 
         }

@@ -3,44 +3,28 @@ package untitled5;
 
 import javalib.colors.*;
 import javalib.worldimages.*;
-public class Ambi {
-        Posn center;
+public class Ambi extends Block {
 	static int width = 150;
         static int height = 50;
         //the space between the center of the Ambi and the edges of the screen
-        static int horizBuffer = 75;
-        static int vertBuffer = 25;
-	IColor col = new Red();
         String code = "none";
         static int speed = 50;
         boolean locked;
         
+        
 	
 	Ambi(Posn center, String code, boolean locked) {
-		this.center = center;
+        super(center, Ambi.width, Ambi.height, new Green());
                 this.code = code;
                 this.locked = locked;
 	}
         
         Ambi(Posn center, boolean locked) {
-		this.center = center;
-                this.code = code;
+        super(center, width, height, new Green());
                 this.locked = locked;
                 this.code = newCode();  
 	}
        
-        public boolean outOfBounds(){
-            if((center.x > Untitled5.screenWidth - horizBuffer)||
-                    (center.y > Untitled5.screenHeight - vertBuffer)||
-                    (center.y < vertBuffer)||
-                    (center.x < horizBuffer)){
-                return true;
-            }
-	
-            return false;
-        }
-        
-        
         public static String newCode(){
             int ran = Test.randomInt(0,3);
             if(ran == 0){
@@ -67,7 +51,7 @@ public class Ambi {
         
         WorldImage ambiImage(){
             return new OverlayImages(
-                    new RectangleImage(this.center, this.width, this.height, this.col),
+                    this.drawBlock(),
                     ambiArrow());
         }
             
@@ -108,16 +92,16 @@ public class Ambi {
             
                 locked = !this.tryUnlock(ke);
                 if(!locked){
-		if (ke.equals("d") && !moveAmbi(1,false).outOfBounds()){
+		if (ke.equals("d") && !moveAmbi(1,false).bufferOutOfBounds()){
                     return moveAmbi(1,true);
 		}
-		else if (ke.equals("a") && !moveAmbi(3,false).outOfBounds()){
+		else if (ke.equals("a") && !moveAmbi(3,false).bufferOutOfBounds()){
                     return moveAmbi(3,true);
 		}
-		else if (ke.equals("w") && !moveAmbi(0,false).outOfBounds()){
+		else if (ke.equals("w") && !moveAmbi(0,false).bufferOutOfBounds()){
                     return moveAmbi(0,true);
 		}
-		else if (ke.equals("s") && !moveAmbi(2,false).outOfBounds()){
+		else if (ke.equals("s") && !moveAmbi(2,false).bufferOutOfBounds()){
                     return moveAmbi(2,true);
 		}
 	}

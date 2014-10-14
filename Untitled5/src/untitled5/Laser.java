@@ -1,14 +1,9 @@
 package untitled5;
 
-import javalib.funworld.*;
 import javalib.colors.*;
-import javalib.worldcanvas.*;
 import javalib.worldimages.*;
-import java.awt.Color;
-import java.util.Random;
 
-public class Laser {
-    Posn center;
+public class Laser extends Block {
     static int width = 50;
     static int height = 100;
     //0 is up, 1 is right, 2 is down, 3 is left
@@ -16,14 +11,13 @@ public class Laser {
     boolean resetMe;
     final static int initSpeed = 40;
     int speed = initSpeed;
-    static IColor laserColor = new Green();
+    static IColor col = new Green();
     
     Laser(Posn center, int dir, int speed) {
-		this.center = center;
+        super(center, width, height, new Green());
                 this.dir = dir;
                 resetMe = false;
                 this.speed = speed;
-                    
 	}
     
     
@@ -46,16 +40,7 @@ public class Laser {
         return newArr;
     }
     
-    public static WorldImage lasersImage(Laser[] currentArray, int i){
-        
-   
-            Laser drawThis = currentArray[i];
-        if(i==0){
-        return new RectangleImage(drawThis.center, drawThis.width, drawThis.height, laserColor);
-        }
-        return new OverlayImages(new RectangleImage(drawThis.center, drawThis.width, drawThis.height, laserColor), lasersImage(currentArray,i-1));       
-        
-    }
+    
     
     
     
@@ -69,15 +54,7 @@ public class Laser {
 	}
     }
     
-    public boolean outOfBounds() {
-        if((this.center.x<0-width&&this.dir==3)
-                ||(this.center.x>Untitled5.screenWidth+width&&this.dir==1)
-                ||(this.center.y<0-height&&this.dir==0)
-                ||(this.center.y>Untitled5.screenHeight+height&&this.dir==2)){
-            return true;
-        }
-        return false;
-	}
+    
 
     
     public static Laser[] arrayCheckAndReset(Laser[] currentArray, int speed) {

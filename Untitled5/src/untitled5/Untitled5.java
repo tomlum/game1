@@ -2,10 +2,7 @@
 package untitled5;
 import javalib.funworld.*;
 import javalib.colors.*;
-import javalib.worldcanvas.*;
 import javalib.worldimages.*;
-import java.awt.Color;
-import java.util.Random;
 
 public class Untitled5 extends World{
     
@@ -17,20 +14,23 @@ public class Untitled5 extends World{
     int laserSpeedIncRate = 20;
     int laserSpeed = Laser.initSpeed;
     boolean gameOver = false;
+    
             
             
     Ambi dexter;
     Laser[] theLasers = new Laser[numberOfLasers]; 
+    DeceptiBot Ultratron;
     public WorldImage back = new RectangleImage(new Posn(0, 0), screenWidth*2, Untitled5.screenHeight*2, new Black());
     
     
     
-    public Untitled5(Ambi ambi, Laser[] las, int time, int laserSpeed) {
+    public Untitled5(Ambi ambi, Laser[] las, DeceptiBot dec, int time, int laserSpeed) {
 		super();
 		this.dexter = ambi;
                 this.theLasers = las;
                 this.time = time;
                 this.laserSpeed = laserSpeed;
+                this.Ultratron = dec;
 	}
     
     
@@ -44,6 +44,7 @@ public class Untitled5 extends World{
             theLasers = Laser.arrayCheckAndReset(theLasers, this.laserSpeed);
             
             return this;
+            
         
         }
         
@@ -58,21 +59,32 @@ public class Untitled5 extends World{
         
         
         public Untitled5 onKeyEvent(String ke) {
-            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers, this.time, this.laserSpeed);
+            return new Untitled5(this.dexter.controlAmbi(ke), this.theLasers, new DeceptiBot(this.Ultratron.moveAmbi(Test.randomInt(0, 3), false)), this.time, this.laserSpeed);
 	}
         
         public WorldImage makeImage(){
+            if(gameOver){
 		return new OverlayImages(this.back, 
-                new OverlayImages(this.dexter.ambiImage(),
-                new OverlayImages(Laser.lasersImage(theLasers, 5),
-                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue())))); 
+                new OverlayImages(lasersImage(theLasers, 5), new OverlayImages(this.dexter.ambiImage(),
+                new OverlayImages((Ultratron.deceptiImage(true)),
+                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
         }
-    
-        //This code is just a super rough sketch!!!
+            else return new OverlayImages(this.back, 
+                new OverlayImages((Ultratron.deceptiImage(false)), new OverlayImages(this.dexter.ambiImage(),
+                new OverlayImages(lasersImage(theLasers, 5),
+                new TextImage(new Posn(100,40), "Score is" + " " + time,30, new Blue()))))); 
+        }
         
-        //This code is just a super rough sketch!!!
+        public WorldImage lasersImage(Laser[] currentArray, int i){
+            Laser drawThis = currentArray[i];
+        if(i==0){
+        return drawThis.drawBlock();
+        }
+        return new OverlayImages(drawThis.drawBlock(), lasersImage(theLasers,i-1));       
         
+    }
     
+        
     
     
 
@@ -85,7 +97,7 @@ public class Untitled5 extends World{
         Test.testRandomButton(300);
         Test.testWholeGame(100,100);
         Untitled5 w = new Untitled5(new Ambi(new Posn(screenWidth/2, screenHeight/2),"up", true),
-        Laser.arrayCheckAndReset(new Laser[numberOfLasers], Laser.initSpeed), 0, Laser.initSpeed);
+        Laser.arrayCheckAndReset(new Laser[numberOfLasers], Laser.initSpeed), new DeceptiBot(Test.randomPosn()), 0, Laser.initSpeed);
         w.bigBang(screenWidth, screenHeight, 0.3);
         
     }
