@@ -1,3 +1,0 @@
-javalib.worldcanvas.AppletCanvas$Refresh
-javalib.worldcanvas.AppletCanvas
-javalib.worldcanvas.AppletCanvas$Painter

@@ -1,1 +1,0 @@
-javalib.colors.Yellow
